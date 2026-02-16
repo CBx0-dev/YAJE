@@ -1,0 +1,8 @@
+{
+  "name": "yaje-root",
+  "private": true,
+  "workspaces": [
+    "src/packages/*",
+    "src/test"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+    "name": "test",
+    "private": true,
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "license": "MIT",
+    "type": "module",
+    "dependencies": {
+        "@yaje/console": "*",
+        "@yaje/core": "*",
+        "@yaje/vite": "*",
+        "@yaje/fs": "*"
+    },
+    "devDependencies": {
+        "@yaje/cli": "*"
+    }
+}

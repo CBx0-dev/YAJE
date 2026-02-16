@@ -1,0 +1,7 @@
+.idea
+.vscode
+
+*.tsbuildinfo
+node_modules
+dist
+.yaje

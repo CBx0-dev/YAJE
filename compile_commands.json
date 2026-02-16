@@ -1,0 +1,37 @@
+[
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native -g -fwrapv -Wall -c -target x86_64-unknown-windows-msvc M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native\\init.c",
+        "file": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native\\init.c"
+    },
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -g -fwrapv -Wall -c -target x86_64-unknown-windows-msvc M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\dtoa.c",
+        "file": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\dtoa.c"
+    },
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -g -fwrapv -Wall -c -target x86_64-unknown-windows-msvc M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\libregexp.c",
+        "file": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\libregexp.c"
+    },
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -g -fwrapv -Wall -c -target x86_64-unknown-windows-msvc M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\libunicode.c",
+        "file": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\libunicode.c"
+    },
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -g -fwrapv -Wall -c -target x86_64-unknown-windows-msvc M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\quickjs.c",
+        "file": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs\\quickjs.c"
+    },
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\console\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -g -fwrapv -Wall -c -target x86_64-unknown-windows-msvc M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\yaje.c",
+        "file": "M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\yaje.c"
+    },
+    {
+        "directory": "M:\\langs\\bun\\YAJE\\src\\test",
+        "command": "clang -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native -I M:\\langs\\bun\\YAJE\\node_modules\\@yaje\\core\\native\\quickjs -g -fwrapv -Wall -c M:\\langs\\bun\\YAJE\\src\\test\\.yaje\\x86_64-unknown-windows-msvc\\gen\\main.c",
+        "file": "M:\\langs\\bun\\YAJE\\src\\test\\.yaje\\x86_64-unknown-windows-msvc\\gen\\main.c"
+    }
+]
