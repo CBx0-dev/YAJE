@@ -129,7 +129,10 @@ export default async function init(): Promise<number> {
             name: "bundler",
             message: "Which bundler should be used",
             choices: [
-                {title: "Vite", value: "@yaje/vite"}
+                {title: "Vite", value: "@yaje/vite"},
+                {title: "Rollup", value: "@yaje/rollup"},
+                {title: "esbuild", value: "@yaje/esbuild"},
+                {title: "WebPack", value: "@yaje/webpack"},
             ]
         },
         {

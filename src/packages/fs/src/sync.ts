@@ -45,3 +45,11 @@ const native: SyncFS = Native.getModule("fs.sync");
 export const sync = {
     native
 }
+
+export function writeFileSync(path: string, content: string): void {
+    const {open, write, close} = native;
+
+    const fd: number = open(path, "w");
+    write(fd, content);
+    close(fd);
+}
