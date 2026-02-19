@@ -141,6 +141,67 @@ static JSValue fs_close(JSContext *ctx, JSValueConst this_val, int argc, JSValue
     return JS_UNDEFINED;
 }
 
+static JSValue fs_seek(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    int64_t file_ptr;
+    FILE *file;
+    int offset;
+    int origin;
+
+    if (argc < 3) {
+        return JS_ThrowTypeError(ctx, "Expected 3 arguments: fd, offset and origin");
+    }
+
+    if (JS_ToInt64(ctx, &file_ptr, argv[0])) {
+        return JS_EXCEPTION;
+    }
+    
+    if (JS_ToInt32(ctx, &offset, argv[1])) {
+        return JS_EXCEPTION;
+    }
+
+    if (JS_ToInt32(ctx, &origin, argv[2])) {
+        return JS_EXCEPTION;
+    }
+
+    // Map JSSeek to real seek
+    origin = (int[]){ SEEK_SET, SEEK_CUR, SEEK_END }[origin];
+
+    file = (FILE *)(uintptr_t)file_ptr;
+    if (!file) {
+        return JS_ThrowTypeError(ctx, "Invalid fd");
+    }
+
+    if (origin < 0 || origin > 2) {
+        return JS_ThrowTypeError(ctx, "Origin contains a invalid value");
+    }
+
+    if (fseek(file, offset, origin) == -1) {
+        return JS_ThrowTypeError(ctx, "Failed to seek in file");
+    }
+
+    return JS_UNDEFINED;
+}
+
+static JSValue fs_tell(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    int64_t file_ptr;
+    FILE *file;
+
+    if (argc < 1) {
+        return JS_ThrowTypeError(ctx, "Expected 1 argument: fd");
+    }
+
+    if (JS_ToInt64(ctx, &file_ptr, argv[0])) {
+        return JS_EXCEPTION;
+    }
+
+    file = (FILE *)(uintptr_t)file_ptr;
+    if (!file) {
+        return JS_ThrowTypeError(ctx, "Invalid fd");
+    }
+
+    return JS_NewInt32(ctx, ftell(file));
+}
+
 void yaje_fs_init(JSRuntime* rt, JSContext *ctx) {
     JSValue sync_fs = JS_NewObject(ctx);
 
@@ -148,6 +209,8 @@ void yaje_fs_init(JSRuntime* rt, JSContext *ctx) {
     JS_SetPropertyStr(ctx, sync_fs, "read", JS_NewCFunction(ctx, fs_read, "read", 2));
     JS_SetPropertyStr(ctx, sync_fs, "write", JS_NewCFunction(ctx, fs_write, "write", 2));
     JS_SetPropertyStr(ctx, sync_fs, "close", JS_NewCFunction(ctx, fs_close, "close", 1));
+    JS_SetPropertyStr(ctx, sync_fs, "seek", JS_NewCFunction(ctx, fs_seek, "seek", 3));
+    JS_SetPropertyStr(ctx, sync_fs, "tell", JS_NewCFunction(ctx, fs_tell, "tell", 1));
 
     yaje_core_register_native(ctx, JS_DupValue(ctx, sync_fs), "fs.sync");
     JS_FreeValue(ctx, sync_fs);
