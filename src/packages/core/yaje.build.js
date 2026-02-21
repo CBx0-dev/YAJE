@@ -2,18 +2,30 @@ import {CFG} from "./dist/builder.js";
 
 const cfg = new CFG();
 
-cfg.addSource("./native", true);
+cfg
+    .addSource("./native", true)
+    .addIncludeDir("./native")
+    .addIncludeDir("./native/quickjs")
+    .defineMacro("QUICKJS_NG_BUILD", true);
 
-cfg.addIncludeDir("./native");
-cfg.addIncludeDir("./native/quickjs");
+if (cfg.platform.isLinux() || cfg.platform.isDarwin()) {
+    cfg.defineMacro("_GNU_SOURCE", true);
+}
 
-cfg.setCFlags(
-    "-g",
-    "-fwrapv",
-    "-Wall"
-);
+if (cfg.platform.isWindows()) {
+    cfg.defineMacro("WIN32_LEAN_AND_MEAN", true);
+}
 
-cfg.setLFlags("-g");
+if (cfg.platform.isLinux()) {
+    cfg.linkLibrary("m");
+    cfg.linkLibrary("dl");
+    cfg.linkLibrary("pthread");
+}
+
+if (cfg.platform.isDarwin()) {
+    cfg.linkLibrary("m");
+    cfg.linkLibrary("pthread");
+}
 
 cfg.setLoadingFunctions("yaje_core_native_init");
 

@@ -28,6 +28,7 @@ export namespace TargetTriple {
         | "msvc"
         | "gnu"
         | "musl"
+        | "system"
         | OpenString;
 }
 
@@ -45,8 +46,7 @@ export interface CFGResult {
     includeDirs: string[];
     defineMacros: Record<string, string | number | true>;
     loadingFunctions: string[];
-    cFlags: string[];
-    lFlags: string[];
+    linkLibraries: string[];
 }
 
 class Arch {
@@ -147,12 +147,11 @@ export class CFG {
 
     private readonly projectDir: string;
     private readonly libraryLookup: Set<string> = new Set<string>();
+    private readonly linkLibraries: Set<string> = new Set<string>();
     private readonly sources: Set<string> = new Set<string>();
     private readonly includeDirs: Set<string> = new Set<string>();
     private readonly defineMacros: Record<string, string | number | true> = {};
     private loadingFunctions: string[] = [];
-    private cFlags: string[] = [];
-    private lFlags: string[] = [];
 
     public readonly arch: Arch;
     public readonly vendor: Vendor;
@@ -248,6 +247,17 @@ export class CFG {
     }
 
     /**
+     * Links a library with the final executable
+     *
+     * @param lib - The library name to link
+     */
+    public linkLibrary(lib: string): this {
+        this.linkLibraries.add(lib);
+
+        return this;
+    }
+
+    /**
      * Defines a preprocessor macro.
      *
      * @param name  - The name of the macro.
@@ -275,32 +285,6 @@ export class CFG {
     }
 
     /**
-     * Sets additional compiler flags.
-     *
-     * @param flags - An array of compiler flags.
-     *
-     * @return The CFG instance for chaining.
-     */
-    public setCFlags(...flags: string[]): this {
-        this.cFlags = flags;
-
-        return this;
-    }
-
-    /**
-     * Sets additional linker flags.
-     *
-     * @param flags - An array of linker flags.
-     *
-     * @return The CFG instance for chaining.
-     */
-    public setLFlags(...flags: string[]): this {
-        this.lFlags = flags;
-
-        return this;
-    }
-
-    /**
      * Completes the configuration and returns the result.
      *
      * @return The build configuration result.
@@ -310,11 +294,10 @@ export class CFG {
             name: CFG.moduleName,
             sources: Array.from(this.sources),
             libraryLookup: Array.from(this.libraryLookup),
+            linkLibraries: Array.from(this.linkLibraries),
             includeDirs: Array.from(this.includeDirs),
             defineMacros: this.defineMacros,
             loadingFunctions: this.loadingFunctions,
-            cFlags: this.cFlags,
-            lFlags: this.lFlags
         }
     }
 }

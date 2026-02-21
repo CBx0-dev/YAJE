@@ -158,6 +158,10 @@ export function parseTargetTriple(triple: string): TargetTriple | null {
  * @return The target triple string.
  */
 export function getTargetTripleString(target: TargetTriple): string {
+    if (target.platform == "darwin" && target.abi == "system") {
+        return `${target.arch}-${target.vendor}-${target.platform}`;
+    }
+
     return `${target.arch}-${target.vendor}-${target.platform}-${target.abi}`;
 }
 
@@ -166,11 +170,11 @@ export function getTargetTripleString(target: TargetTriple): string {
  *
  * @param dependencies - An array of CFGResult objects representing the module's dependencies.
  * @param module       - The CFGResult object representing the module to compile.
- * @param target       - The target triple for which to generate arguments.
+ * @param flags        - CFlags that should for compiling
  *
  * @return An array of strings containing the compiler arguments.
  */
-export function generateCompilerArguments(dependencies: CFGResult[], module: CFGResult, target: TargetTriple): string[] {
+export function generateCompilerArguments(dependencies: CFGResult[], module: CFGResult, flags: string[]): string[] {
     const includeDirs: string[] = [];
     const defineMacros: string[] = [];
 
@@ -204,7 +208,7 @@ export function generateCompilerArguments(dependencies: CFGResult[], module: CFG
     for (const libraryLookup of module.libraryLookup) {
         args.push("-L", libraryLookup);
     }
-    args.push(...module.cFlags, "-c", "-target", getTargetTripleString(target));
+    args.push(...flags);
     return args;
 }
 
@@ -329,22 +333,22 @@ async function bundleFiles(objects: string[], archive: string): Promise<boolean>
  *
  * @param module        - The CFGResult object representing the module to compile.
  * @param dependencies  - An array of CFGResult objects representing the module's dependencies.
- * @param target        - The target triple for which to compile the module.
  * @param objectFolder  - The directory where object files should be stored.
  * @param libraryFolder - The directory where the resulting library should be stored.
  * @param cacheFolder   - The directory where cache files should be stored.
+ * @param flags         - CFlgas that should be used for compiling
  *
  * @return The path to the generated static library archive.
  */
 export async function compileModule(
     module: CFGResult,
     dependencies: CFGResult[],
-    target: TargetTriple,
     objectFolder: string,
     libraryFolder: string,
-    cacheFolder: string
+    cacheFolder: string,
+    flags: string[]
 ): Promise<string> {
-    const args: string[] = generateCompilerArguments(dependencies, module, target);
+    const args: string[] = generateCompilerArguments(dependencies, module, flags);
 
     const nameTable: Map<string, number> = new Map<string, number>();
     const objects: string[] = [];

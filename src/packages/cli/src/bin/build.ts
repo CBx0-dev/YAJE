@@ -12,6 +12,35 @@ import * as builder from "../builder.js";
 import * as compiler from "../compiler.js";
 import * as bundler from "../bundler.js";
 import {type NativeTrackedPackage, PackageCollection, type PackageJSON, type TrackedPackage} from "../package.js";
+import {getTargetTripleString} from "../compiler.js";
+
+export function getBaseCFlags(target: TargetTriple): string[] {
+    return [
+        "-std=gnu11",
+        "-Wall",
+        "-Wextra",
+        "-Wformat=2",
+        "-Wno-implicit-fallthrough",
+        "-Wno-sign-compare",
+        "-Wno-missing-field-initializers",
+        "-Wno-unused-parameter",
+        "-Wno-unused-but-set-variable",
+        "-Wno-unused-result",
+        "-Wno-array-bounds",
+        "-fwrapv",
+        "-funsigned-char",
+        "-g",
+        "-target",
+        getTargetTripleString(target),
+        "-c"
+    ];
+}
+
+export function getBaseLFlags(target: TargetTriple): string[] {
+    return [
+        "-g"
+    ];
+}
 
 /**
  * Resolves the directory path of a package by searching up the directory tree.
@@ -108,10 +137,11 @@ export async function checkPackageJSON(
 /**
  * Compiles a native module into a static library.
  *
- * @param module   - The native tracked package to compile.
- * @param packages - The collection of all tracked packages.
- * @param target   - The target triple to compile for.
- * @param output   - Information about the output configuration.
+ * @param module      - The native tracked package to compile.
+ * @param packages    - The collection of all tracked packages.
+ * @param target      - The target triple to compile for.
+ * @param output      - Information about the output configuration.
+ * @param cacheFolder - Cache folder
  *
  * @return A promise that resolves to the path of the generated static library.
  */
@@ -122,7 +152,9 @@ async function compileModule(
     output: OutputInformation,
     cacheFolder: string
 ): Promise<string> {
+    const flags: string[] = getBaseCFlags(target);
     const dependencies: CFGResult[] = [];
+
 
     if (module.packageJSON.dependencies) for (const name of Object.keys(module.packageJSON.dependencies)) {
         const pkg: TrackedPackage | NativeTrackedPackage | null = packages.get(name);
@@ -138,7 +170,14 @@ async function compileModule(
         fs.mkdirSync(outputFolder, {recursive: true});
     }
 
-    return await compiler.compileModule(module.instructions, dependencies, target, outputFolder, output.modFolder, cacheFolder);
+    return await compiler.compileModule(
+        module.instructions,
+        dependencies,
+        outputFolder,
+        output.modFolder,
+        cacheFolder,
+        flags
+    );
 }
 
 /**
@@ -254,7 +293,7 @@ async function buildNativeCode(packages: PackageCollection, target: TargetTriple
 
     const loadingFunctions: string[] = [];
     const modules: string[] = [];
-    const linkerFlags: string[] = [];
+    const libraries: Set<string> = new Set<string>();
 
     console.log(chalk.blue.bold("Compiling Native Code"));
 
@@ -264,7 +303,9 @@ async function buildNativeCode(packages: PackageCollection, target: TargetTriple
         }
 
         loadingFunctions.push(...module.instructions.loadingFunctions);
-        linkerFlags.push(...module.instructions.lFlags);
+        for (const lib of module.instructions.linkLibraries) {
+            libraries.add(`-l${lib}`);
+        }
 
         const spinner = ora({
             text: `  ${chalk.dim("Compile module")} ${chalk.white(module.packageJSON.name)}`,
@@ -338,8 +379,10 @@ async function buildNativeCode(packages: PackageCollection, target: TargetTriple
         color: 'cyan'
     }).start();
 
+    const lFlags: string[] = getBaseLFlags(target).concat(Array.from(libraries));
+
     try {
-        await linkModules(modules, executableFile, linkerFlags);
+        await linkModules(modules, executableFile, lFlags);
         linkSpinner.succeed();
     } catch (e) {
         linkSpinner.fail();

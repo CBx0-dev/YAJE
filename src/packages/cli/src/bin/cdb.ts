@@ -8,7 +8,7 @@ import {type CFGResult, generateOutputInformation, type OutputInformation, type 
 
 import * as compiler from "../compiler.js";
 import {type NativeTrackedPackage, PackageCollection} from "../package.js";
-import {checkPackageJSON} from "./build.js";
+import {checkPackageJSON, getBaseCFlags} from "./build.js";
 
 interface CDBEntry {
     directory: string;
@@ -65,7 +65,7 @@ export default async function cdb(target: TargetTriple, out: string): Promise<nu
             }
         }
 
-        const args: string[] = compiler.generateCompilerArguments(dependencies, nativeModule.instructions, target);
+        const args: string[] = compiler.generateCompilerArguments(dependencies, nativeModule.instructions, getBaseCFlags(target));
 
         for (const source of nativeModule.instructions.sources) {
             const absoluteSource: string = path.isAbsolute(source) ? source : path.join(nativeModule.packageFolder, source);

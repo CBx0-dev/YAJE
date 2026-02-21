@@ -6,12 +6,4 @@ cfg.addSource("./native");
 cfg.addIncludeDir("./native");
 cfg.setLoadingFunctions("yaje_console_init");
 
-cfg.setCFlags(
-    "-g",
-    "-fwrapv",
-    "-Wall"
-);
-
-cfg.setLFlags("-g");
-
 export default cfg;

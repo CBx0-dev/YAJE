@@ -28,8 +28,15 @@ flowchart TB
     console["@yaje/console"]
     fs["@yaje/fs"]
     vite["@yaje/vite"]
+    rollup["@yaje/rollup"]
+    webpack["@yaje/webpack"]
+    esbuild["@yaje/esbuild"]
+
     cli --> core
     vite --> core
+    rollup --> core
+    webpack --> core
+    esbuild --> core
     console --> core
     fs --> core
 ```
@@ -39,6 +46,9 @@ flowchart TB
 - `@yaje/console`: A native module providing a standard `console` API (log, error, warn, etc.).
 - `@yaje/fs`: A native module providing synchronous file system operations.
 - `@yaje/vite`: Integration for using Vite as a bundler for YAJE applications.
+- `@yaje/rollup`: Integration for using Rollup as a bundler for YAJE applications.
+- `@yaje/webpack`: Integration for using Webpack as a bundler for YAJE applications.
+- `@yaje/esbuild`: Integration for using esbuild as a bundler for YAJE applications.
 
 ### Getting Started
 
