@@ -55,7 +55,7 @@ flowchart TB
 #### Prerequisites
 
 - **Clang**: Used for compiling the native engine and your custom modules.
-- **Ar**: The standard archiver tool for creating static libraries.
+- **llvm-ar**: The standard llvm archiver tool for creating static libraries (Mostly shipped with clang).
 - **Node.js & NPM**: Required for the CLI tool and package management.
 
 #### Installation

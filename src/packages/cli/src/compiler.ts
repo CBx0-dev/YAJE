@@ -23,13 +23,13 @@ export async function isClangInstalled(): Promise<boolean> {
 }
 
 /**
- * Checks if the system archiver (ar) is installed and available in the system path.
+ * Checks if the system archiver llvm-ar is installed and available in the system path.
  *
  * @return True if the archiver is installed, false otherwise.
  */
 export async function isArchiverInstalled(): Promise<boolean> {
     try {
-        const result = await subprocess.run("ar", ["--version"]);
+        const result = await subprocess.run("llvm-ar", ["--version"]);
         return result.code == 0
     } catch (error) {
         return false;
@@ -319,7 +319,7 @@ export async function calculateHash(source: string, dependencies: string[], args
  * @return True if bundling was successful.
  */
 async function bundleFiles(objects: string[], archive: string): Promise<boolean> {
-    const result = await subprocess.run("ar", ["rcs", archive, ...objects]);
+    const result = await subprocess.run("llvm-ar", ["rcs", archive, ...objects]);
 
     if (result.code != 0) {
         throw new Error(result.stderr);
